@@ -74,30 +74,16 @@ bool R2_Construct (double eps, std::set<Configuration*> *R2) {
     b1 = (*it)->config.second.first;
     b2 = (*it)->config.second.second;
 
-    ////check if config is valid
-    //if (a1 + b1 > 2.00 || a2 + b2 > 2.00) {
-    //  std::cout << "Error config: (" << a1 << ", " << a2 <<") ; (" << b1 << ", " << b2 << ")" << std::endl;
-    //  return false;
-    //}
-
-    //calculate the limit of the current config
     double l1, l2;
-    l1 = 2.00 - (double)(a1 + b1);
-    if (l1 > 1.00) l1 = 1.0;
-    l2 = 2.00 - (double)(a2 + b2);
-    if (l2 > 1.00) l2 = 1.0;
-
-    // std::cout << "l1: " << l1 << std::endl;
-    // std::cout << "l2: " << l2 << std::endl;
-    // std::cout << "eps * l1: " << eps*l1 << std::endl;
-    // std::cout << "eps * l2: " << eps*l2 << std::endl;
-
-
+    l1 = 2.0 - (double)(a1 + b1);
+    if (l1 > 1.0) l1 = 1.0;
+    l2 = 2.0 - (double)(a2 + b2);
+    if (l2 > 1.0) l2 = 1.0;
 
 	for (double g1 = 0; g1 <= l1; g1 += 1 / eps) {
 		for (double g2 = 0; g2 <= l2; g2 += 1 / eps) {
 			if (g1 == 0 && g2 == 0) continue;
-      if (a1 + g1 > 2.00 || a2 + g2 > 2.00) continue;
+      if (a1 + g1 > 2.0 || a2 + g2 > 2.0) continue;
 
 			double aMax, bMax;
 			aMax = std::max(a1 + g1, a2 + g2);
@@ -134,57 +120,15 @@ std::set<Configuration*> OVERLOAD(std::set<Configuration*> &R2, double alpha) {
     double b2 = (*it)->config.second.second;
 
     //comment this out
-    if (count++ % 50 == 0)
-      std::cout << "aMax = " << std::max(a1, a2) << " ; bMax = " << std::max(b1, b2) << std::endl;
+    // if (count++ % 50 == 0)
+    //   std::cout << "aMax = " << std::max(a1, a2) << " ; bMax = " << std::max(b1, b2) << std::endl;
 
-    if ((std::max(a1, a2) + 1.0) > alpha && (std::max(b1, b2) + 1.0) > alpha) Overloaded.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));
+    if (!(std::max(a1, a2) + 1.0 <= alpha) && !(std::max(b1, b2) + 1.0 <= alpha)) Overloaded.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));
   }
   return Overloaded;
 
 }
-// std::set<Configuration*> OVERLOADED (std::set<Configuration*> R2, double alpha) {
-//   std::set<Configuration*> R2_OVERLOAD;
-//   //iterate through R2 set
-//   for (std::set<Configuration*>::iterator it = R2.begin(); it != R2.end(); it++) {
-//     double a1, a2, b1, b2;
-//     a1 = (*it)->config.first.first;
-//     a2 = (*it)->config.first.second;
-//     b1 = (*it)->config.second.first;
-//     b2 = (*it)->config.second.second;
-//
-//     //std::cout << "(" << a1 << ", " << a2 <<") ; (" << b1 << ", " << b2 << ")\n";
-//
-//     double aMax, bMax;
-//     aMax = std::max(a1, a2);
-//     bMax = std::max(b1, b2);
-//
-//     std::cout << "aMax: " << aMax << " ; bMax: " << bMax << std::endl;
-//
-//     double m1 = aMax + 1;
-//     double m2 = bMax + 1;
-//
-//     if (!(m1 < alpha) && !(m2 < alpha)) {std::cout << "OVERLOADED CONFIG" << std::endl; R2_OVERLOAD.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));}
-//
-//
-//     // std::cout << "aMax: " << aMax << " bMax: " << bMax << std::endl;
-//     // double alphaMinusOne = alpha - 1;
-//     // std::cout << "alphaMinusOne: " << alphaMinusOne << std::endl;
-//     //
-//     // std::cout << "aMax + 1: " << (double)(aMax + 1.00) << std::endl;
-//     // std::cout << "bMax + 1: " << (double)(bMax + 1.00) << std::endl;
-//     //
-//     // double epsilon = 0.00001;
-//     // std::cout << "aMax + 1 - alpha: " << aMax + 1 - alpha << std::endl;
-//     // std::cout << "bMax + 1 - alpha: " << bMax + 1 - alpha << std::endl;
-//
-//     //if ((aMax + 1 - alpha > epsilon) && (bMax + 1 - alpha > epsilon)) R2_OVERLOAD.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));
-//     //if (aMax + 1000000 > (double)(alpha - 1) + 1000000 && bMax + 1000000 > (double)(alpha - 1) + 1000000) R2_OVERLOAD.insert(new Configuration (std::make_pair (a1, a2), std::make_pair(b1, b2)));
-//     //if (/*aMax + 1> alpha && bMax + 1 > alpha*/((a1 > alpha - 1) || (a2 > alpha - 1)) && ((b1 > alpha - 1) || (b2 > alpha - 1)))  R2_OVERLOAD.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));
-//     //if (!(aMax + 1 < alpha) && !(bMax + 1 < alpha)) {std::cout << "OVERLOADED CONFIG" << std::endl; R2_OVERLOAD.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));}
-//   }
-//   return R2_OVERLOAD;
-// }
-//
+
 // //Overflown: basically if the config creates a line segment that doesn't cross the unit box, then it is Overflown
 std::set<Configuration*> OVERFLOWN(std::set<Configuration*> &R2_set) { // should be passing in overloaded set
     std::set<Configuration*> Overflown;
@@ -198,7 +142,10 @@ std::set<Configuration*> OVERFLOWN(std::set<Configuration*> &R2_set) { // should
       //(a1, a2) (b1, b2) = (0, 0) (1, 1)
 
       //((y1−y2)(ax−x1)+(x2−x1)(ay−y1))((y1−y2)(bx−x1)+(x2−x1)(by−y1))<0.
-      if ((((y1-y2)*(0-x1)+(x2-x1)*(0-y1))*((y1-y2)*(1-x1)+(x2-x1)*(1-y1))) >= 0) Overflown.insert(new Configuration(std::make_pair(x1, y1), std::make_pair(x2, y2)));
+      if ((((y1-y2)*(0.0-x1)+(x2-x1)*(0.0-y1))*((y1-y2)*(1.0-x1)+(x2-x1)*(1.0-y1))) >= 0.0) {
+        //std::cout << "OVERFLOWN: (" << x1 << ", " << y1 << ") ; (" << x2 << ", " << y2 << ")" << std::endl;
+        Overflown.insert(new Configuration(std::make_pair(x1, y1), std::make_pair(x2, y2)));
+      }
     }
     return Overflown;
 }
@@ -230,12 +177,12 @@ int main() {
   std::cout << "\n";
 
   std::cout << "Constructing R2..." << std::endl;
+  std::cout << "Number of AT MOST expected elements in R2: " << (pow((2*eps + 1), 4) - 4) << std::endl;
   int count = 0;
   auto t1 = Clock::now(); //start timer
   if (R2_Construct(eps, &R2)) {
     auto t2 = Clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "milliseconds" << std::endl;
-    std::cout << "Number of AT MOST expected elements in R2: " << (pow((2*eps + 1), 4) - 4) << std::endl;
     std::cout << "Number of elements in R2: " << R2.size() << std::endl;
 
   } else {std::cout << "error in R2_Construct!" << std::endl;}
@@ -243,8 +190,8 @@ int main() {
 
   //Overloaded set
   int num, den;
-  num = 8;
-  den = 3;
+  std::cout << "num followed by den: ";
+  std::cin >> num >> den;
   double alpha = (double) num / den;
   std::cout << "Construction R2 intersect L(" << num << "/" << den << ")..." << std::endl;
   std::cout << "Alpha: " << alpha << std::endl;
