@@ -1,5 +1,5 @@
 /*
-Eshant's version of construction R2
+Naive Implementation (with Eshant's suggestions)
 
 Create R2 as a set with initially (0, 0) (0, 0)
 for every Configuration in R2
@@ -11,6 +11,8 @@ for every Configuration in R2
 - So, creating G doesn't involve having to rotate through a set of jobs
 - Calculate maximum job given a config, then add up everything up to that point
 
+For an eps < 10, everything works fine (all calculations like checking for overflown and overloaded configurations are correct), however
+for some reason the machine hiccups and usually gets stuck trying to calculate R2 when using an epsilon >= 10 (at least, for my machines).
 
 */
 
@@ -121,12 +123,11 @@ std::set<Configuration*> OVERLOAD(std::set<Configuration*> &R2, double alpha) {
 
     //comment this out
     // if (count++ % 50 == 0)
-    //   std::cout << "aMax = " << std::max(a1, a2) << " ; bMax = " << std::max(b1, b2) << std::endl;
+      // std::cout << "aMax = " << std::max(a1, a2) << " ; bMax = " << std::max(b1, b2) << std::endl;
 
     if (!(std::max(a1, a2) + 1.0 <= alpha) && !(std::max(b1, b2) + 1.0 <= alpha)) Overloaded.insert(new Configuration(std::make_pair(a1, a2), std::make_pair(b1, b2)));
   }
   return Overloaded;
-
 }
 
 // //Overflown: basically if the config creates a line segment that doesn't cross the unit box, then it is Overflown
@@ -142,30 +143,13 @@ std::set<Configuration*> OVERFLOWN(std::set<Configuration*> &R2_set) { // should
       //(a1, a2) (b1, b2) = (0, 0) (1, 1)
 
       //((y1−y2)(ax−x1)+(x2−x1)(ay−y1))((y1−y2)(bx−x1)+(x2−x1)(by−y1))<0.
-      if ((((y1-y2)*(0.0-x1)+(x2-x1)*(0.0-y1))*((y1-y2)*(1.0-x1)+(x2-x1)*(1.0-y1))) >= 0.0) {
+      if (!((((y1-y2)*(0.0-x1)+(x2-x1)*(0.0-y1))*((y1-y2)*(1.0-x1)+(x2-x1)*(1.0-y1))) < 0.0)) {
         //std::cout << "OVERFLOWN: (" << x1 << ", " << y1 << ") ; (" << x2 << ", " << y2 << ")" << std::endl;
         Overflown.insert(new Configuration(std::make_pair(x1, y1), std::make_pair(x2, y2)));
       }
     }
     return Overflown;
 }
-// std::set<Configuration*> OVERFLOWN (std::set<Configuration*> Overloaded) {
-//   std::set<Configuration*> OVERFLOWN;
-//   for (std::set<Configuration*>::iterator it = Overloaded.begin(); it != Overloaded.end(); it++) {
-//     double x1, y1, x2, y2;
-//     x1 = (*it)->config.first.first;
-//     y1 = (*it)->config.first.second;
-//     x2 = (*it)->config.second.first;
-//     y2 = (*it)->config.second.second;
-//
-//     //(a1, a2) (b1, b2) = (0, 0) (1, 1)
-//
-//     //((y1−y2)(ax−x1)+(x2−x1)(ay−y1))((y1−y2)(bx−x1)+(x2−x1)(by−y1))<0.
-//     if ((((y1-y2)*(0-x1)+(x2-x1)*(0-y1))*((y1-y2)*(1-x1)+(x2-x1)*(1-y1))) >= 0) OVERFLOWN.insert(new Configuration(std::make_pair(x1, y1), std::make_pair(x2, y2)));
-//   }
-//   return OVERFLOWN;
-// }
-
 
 //main driver function
 int main() {
